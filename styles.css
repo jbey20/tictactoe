@@ -1,0 +1,61 @@
+.container {
+  display: grid;
+  grid-template-areas:
+    'zero one two'
+    'three four five'
+    'six seven eight';
+  height: 600px;
+  width: 600px;
+}
+
+.boardCell {
+  border: 3px solid black;
+  height: 200px;
+  width: 200px;
+  font-size: rem;
+  font-family: Arial;
+  font-size: 10em;
+  line-height: 200px;
+  text-align: center;
+}
+
+
+.boardCell:hover {
+  background-color: rgb(166, 204, 166);
+}
+
+#cell0 {
+  grid-area: zero;
+}
+
+#cell1 {
+  grid-area: one;
+}
+
+#cell2 {
+  grid-area: two;
+}
+
+#cell3 {
+  grid-area: three;
+}
+
+#cell4 {
+  grid-area: four;
+}
+
+#cell5 {
+  grid-area: five;
+}
+
+#cell6 {
+  grid-area: six;
+}
+
+#cell7 {
+  grid-area: seven;
+}
+
+#cell8 {
+  grid-area: eight;
+}
