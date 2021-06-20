@@ -11,7 +11,38 @@
 </head>
 
 <body>
-  <div class='container'>
+  <header class='menu'>
+    <div class='mode-input'>
+      <label for='mode'>Choose game mode:</label>
+      <select id='mode' name='mode'>
+        <option value='1'>One Player</option>
+        <option value='2'>Two Player</option>
+      </select>
+    </div>
+
+    <div class='player-area'>
+      <div>
+        <div class='player-input'>
+          <label for='player1'>Enter X player's name:</label>
+          <input type='text' id='player1' name='player1'>
+        </div>
+        <div class='player-input'>
+          <label for='player2'>Enter O player's name:</label>
+          <input type='text' id='player2' name='player2'>
+        </div>
+      </div>
+      <button type='button' onclick='gameBoard.startGame()'>Start</button>
+    </div>
+    
+    <div>
+      
+      <button type='button' onclick='gameBoard.resetGame()'>Reset</button>
+    </div>
+    
+  </header>
+  
+  
+  <div class='board-container' id='myContainer'>
     <div class='boardCell' id='cell0'></div>
     <div class='boardCell' id='cell1'></div>
     <div class='boardCell' id='cell2'></div>
@@ -21,6 +52,15 @@
     <div class='boardCell' id='cell6'></div>
     <div class='boardCell' id='cell7'></div>
     <div class='boardCell' id='cell8'></div>
+  </div>
+
+
+  <div id="myModal" class="Modal is-hidden is-visuallyHidden">
+    <!-- Modal content -->
+    <div class="Modal-content">
+      <span id="closeModal" class="Close">&times;</span>
+      <p id='msg'></p>
+    </div>
   </div>
 
 </body>
