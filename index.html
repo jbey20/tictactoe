@@ -21,17 +21,17 @@
     </div>
 
     <div class='player-area'>
-      <div>
+      <div id='player-boxes'>
         <div class='player-input'>
           <label for='player1'>Enter X player's name:</label>
-          <input type='text' id='player1' name='player1'>
+          <input type='text' id='playerX' name='player1'>
         </div>
         <div class='player-input'>
           <label for='player2'>Enter O player's name:</label>
-          <input type='text' id='player2' name='player2'>
+          <input type='text' id='playerO' name='player2'>
         </div>
       </div>
-      <button type='button' onclick='gameBoard.startGame()'>Start</button>
+      <button type='button' onclick='gameBoard.startGame(); displayController.readPlayers()'>Start</button>
     </div>
     
     <div>

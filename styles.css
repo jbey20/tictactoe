@@ -61,7 +61,13 @@ body {
 
 .boardCell:hover {
   background-color: rgb(166, 204, 166);
-  
+
+}
+
+#player-boxes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 /*#region Cell Styles*/ 
@@ -160,7 +166,7 @@ body {
 }
 
 .is-blurred {
-  filter: blur(2px);
-  -webkit-filter: blur(2px);
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
 }
 

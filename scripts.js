@@ -1,6 +1,6 @@
-//Enter functionality to add Player's names
-  //popup for 
-//responsiveness & looks
+//hide player names after start game and unhide when game over
+//banner saying who's turn it is
+//responsiveness & looks (make whole thing smaller?)
 //AI
 
 
@@ -12,21 +12,25 @@ const gameBoard = (() => {
   let xPlayer;
   let oPlayer;
 
-  const assignPlayer = (player1, player2) => {
-    xPlayer = player1;
-    oPlayer = player2;
-  } 
+  const assignPlayer = (playerX, playerO) => {
+    xPlayer = playerX.getName();
+    oPlayer = playerO.getName();
+  };
+
+  const getPlayers = () => {
+    return [xPlayer, oPlayer];
+  };
 
   const toggleTurn = () => {
     if (playerTurn == 'O') playerTurn = 'X';
     else playerTurn = 'O';
-  }
+  };
 
   const checkWin = () => {
     if (win.includes(3) || win.includes(-3)) return 1;
     else if (moveCounter == 9) return 2;
     else return 3;
-  }
+  };
 
   const increment = (cell) => {
     moveCounter++;
@@ -73,7 +77,7 @@ const gameBoard = (() => {
       win[5] += x;
       win[6] += x;
     }
-  }
+  };
 
   const makePlay = (cell) => {
     if (gameState[cell]) {
@@ -85,24 +89,31 @@ const gameBoard = (() => {
       gameState[cell] = playerTurn;
       displayController.fillGrid();
       if (checkWin() == 1) {
-        const msg = `${playerTurn} wins!`;
-        displayController.endGame(msg);
+        const players = gameBoard.getPlayers();
+        if (playerTurn == 'X') {
+          const msg = `${players[0]} wins!`;
+          displayController.endGame(msg);
+        }
+        else {
+          const msg = `${players[1]} wins!`;
+          displayController.endGame(msg);
+        }
       }
       else if (checkWin() == 2) {
         const msg = 'Draw!'
         displayController.endGame(msg);
       }
     }
-  }
+  };
 
   const getGameState = () => {
     return gameState;
-  }
+  };
 
   const startGame = () => {
     displayController.fillGrid();
     displayController.initialize();
-  }
+  };
 
   const resetGame = () => {
     for (let i = 0; i < gameState.length; i++) {
@@ -114,13 +125,15 @@ const gameBoard = (() => {
     playerTurn = 'O';
     moveCounter = 0;
     displayController.emptyGrid();
-  }
+  };
 
   return {
     getGameState,
     makePlay,
     startGame,
-    resetGame
+    resetGame,
+    assignPlayer,
+    getPlayers
   };
 })();
 
@@ -132,7 +145,7 @@ const displayController = (() => {
           gameBoard.makePlay(parseInt(div.id.slice(-1)));
       });
     });
-  }
+  };
 
   const endGame = (text) => {
     console.log('ending game');
@@ -172,7 +185,7 @@ const displayController = (() => {
         container.parentElement.className = "";
       }
     }
-  }
+  };
 
   const writeToDOM = (selector, content) => {
     document.querySelector(selector).textContent = content;
@@ -192,12 +205,23 @@ const displayController = (() => {
     for (let i = 0; i < grid.length; i++) {
       writeToDOM(`#cell${i}`, '');
     }
-  }
+  };
+
+  const readPlayers = () => {
+    const xPlayer = document.querySelector('#playerX').value;
+    const oPlayer = document.querySelector('#playerO').value;
+    gameBoard.assignPlayer(
+      playerFactory(xPlayer, 'X'),
+      playerFactory(oPlayer, 'O')
+    );
+  };
+
   return {
     fillGrid,
     initialize,
     emptyGrid,
     endGame,
+    readPlayers
   };
 })();
 
