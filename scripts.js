@@ -147,6 +147,31 @@ const displayController = (() => {
     });
   };
 
+  const selectPlayers = () => {
+    const dropdown = document.querySelector('#mode');
+    dropdown.addEventListener('change', e => {
+      const mode1 = document.querySelectorAll('.one-player-input');
+      const mode2 = document.querySelectorAll('.two-player-input');
+      
+      if (e.target.value == '1') {
+        mode2.forEach(item => {
+          item.classList.add('hidden-player-input')
+        });
+        mode1.forEach(item => {
+          item.classList.remove('hidden-player-input');
+        });
+      }
+      else {
+        mode1.forEach(item => {
+          item.classList.add('hidden-player-input')
+        });
+        mode2.forEach(item => {
+          item.classList.remove('hidden-player-input');
+        });
+      };
+    });
+  };
+
   const endGame = (text) => {
     console.log('ending game');
     var modal = document.getElementById('myModal');
@@ -208,12 +233,22 @@ const displayController = (() => {
   };
 
   const readPlayers = () => {
-    const xPlayer = document.querySelector('#playerX').value;
-    const oPlayer = document.querySelector('#playerO').value;
-    gameBoard.assignPlayer(
-      playerFactory(xPlayer, 'X'),
-      playerFactory(oPlayer, 'O')
-    );
+    const mode = document.querySelector('#mode');
+
+    if (mode.value == 2) {
+      const xPlayer = document.querySelector('#playerX').value;
+      const oPlayer = document.querySelector('#playerO').value;
+      gameBoard.assignPlayer(
+        playerFactory(xPlayer, 'X'),
+        playerFactory(oPlayer, 'O')
+      );
+    }
+    else {
+      const symbol = document.querySelector('#XorO').value;
+      const playerName = document.querySelector('#playerName').value;
+      if (symbol == 'X') gameBoard.assignPlayer(playerFactory(playerName, 'X'));
+      else gameBoard.assignPlayer(playerFactory(playerName, 'O'));
+    };    
   };
 
   return {
@@ -221,7 +256,8 @@ const displayController = (() => {
     initialize,
     emptyGrid,
     endGame,
-    readPlayers
+    readPlayers,
+    selectPlayers
   };
 })();
 
@@ -234,6 +270,8 @@ const playerFactory = (name, symbol) => {
   }
 }
 
+
+displayController.selectPlayers();
     
 
 

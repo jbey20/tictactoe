@@ -22,20 +22,30 @@
 
     <div class='player-area'>
       <div id='player-boxes'>
-        <div class='player-input'>
+        <div class='two-player-input hidden-player-input'>
           <label for='player1'>Enter X player's name:</label>
           <input type='text' id='playerX' name='player1'>
         </div>
-        <div class='player-input'>
+        <div class='two-player-input hidden-player-input'>
           <label for='player2'>Enter O player's name:</label>
           <input type='text' id='playerO' name='player2'>
         </div>
+        <div class='one-player-input'>
+          <label for='playerName'>Enter your name:</label>
+          <input type='text' id='playerName' name='playerName'>
+        </div>
+        <div class='one-player-input'>
+          <label for='XorO'>Choose your symbol:<label>
+            <select id='XorO' name='XorO'>
+              <option value='X'>X</option>
+              <option value='O'>O</option>
+            </select>
+        </div>
       </div>
-      <button type='button' onclick='gameBoard.startGame(); displayController.readPlayers()'>Start</button>
     </div>
     
-    <div>
-      
+    <div class='buttons'>
+      <button type='button' onclick='gameBoard.startGame(); displayController.readPlayers()'>Start</button>
       <button type='button' onclick='gameBoard.resetGame()'>Reset</button>
     </div>
     
