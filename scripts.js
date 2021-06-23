@@ -1,7 +1,10 @@
 //hide player names after start game and unhide when game over
 //banner saying who's turn it is
-//responsiveness & looks (make whole thing smaller?)
+//After a game is over, you have to hit start again (change color of start based on playing or not?)
 //AI
+  //iron out the process for initiating the AI
+  //Make the AI work when it needs to move first
+  //make harder version.
 
 
 const gameBoard = (() => {
@@ -21,13 +24,21 @@ const gameBoard = (() => {
     return [xPlayer, oPlayer];
   };
 
+  const getMoveCounter = () => {
+    return moveCounter;
+  }
+
   const toggleTurn = () => {
     if (playerTurn == 'O') playerTurn = 'X';
     else playerTurn = 'O';
   };
 
   const checkWin = () => {
-    if (win.includes(3) || win.includes(-3)) return 1;
+    console.log(win);
+    if (win.includes(3) || win.includes(-3)) {
+      AI.stop();
+      return 1;
+    }
     else if (moveCounter == 9) return 2;
     else return 3;
   };
@@ -60,7 +71,7 @@ const gameBoard = (() => {
       win[7] += x;
     }
     else if (cell == 5) {
-      win[2] += x;
+      win[1] += x;
       win[5] += x;
     }
     else if (cell == 6) {
@@ -82,6 +93,7 @@ const gameBoard = (() => {
   const makePlay = (cell) => {
     if (gameState[cell]) {
       console.log('Tried to play on already played space');
+      return true;
     }
     else {
       toggleTurn();
@@ -95,6 +107,7 @@ const gameBoard = (() => {
           displayController.endGame(msg);
         }
         else {
+          console.log(`${playerTurn}. We got here.`)
           const msg = `${players[1]} wins!`;
           displayController.endGame(msg);
         }
@@ -103,6 +116,7 @@ const gameBoard = (() => {
         const msg = 'Draw!'
         displayController.endGame(msg);
       }
+      return false;
     }
   };
 
@@ -133,7 +147,8 @@ const gameBoard = (() => {
     startGame,
     resetGame,
     assignPlayer,
-    getPlayers
+    getPlayers, 
+    getMoveCounter
   };
 })();
 
@@ -246,8 +261,12 @@ const displayController = (() => {
     else {
       const symbol = document.querySelector('#XorO').value;
       const playerName = document.querySelector('#playerName').value;
-      if (symbol == 'X') gameBoard.assignPlayer(playerFactory(playerName, 'X'));
-      else gameBoard.assignPlayer(playerFactory(playerName, 'O'));
+      if (symbol == 'X') {
+        gameBoard.assignPlayer(playerFactory(playerName, 'X'), playerFactory('WOPR', 'O'));
+      }
+      else {
+        gameBoard.assignPlayer(playerFactory('WOPR', 'X'), playerFactory(playerName, 'O'));
+      }
     };    
   };
 
@@ -261,13 +280,47 @@ const displayController = (() => {
   };
 })();
 
+const AI = (() => {
+  const countermove = (e) => {
+    const div = e.target;
+
+    const getRandomCell = () => {
+      min = Math.ceil(0);
+      max = Math.floor(8);
+      const cell = Math.floor(Math.random() * (max - min) + min);
+      console.log(cell);
+      return cell;
+    }; 
+    while (gameBoard.makePlay(getRandomCell())) {
+      console.log("Invalid Play");
+    };
+  };
+  
+  const play = (mode) => {
+    document.querySelectorAll('.board-container div').forEach( item => {
+        item.addEventListener('click', countermove);
+    });
+  };
+
+  const stop = () => {
+    document.querySelectorAll('.board-container div').forEach( item => {
+      item.removeEventListener('click', countermove);
+    });
+  };
+
+  return {
+    play,
+    stop,
+  };
+})();
+
 const playerFactory = (name, symbol) => {
   const getName = () => name;
   const getSymbol = () => symbol;
   return {
     getName,
     getSymbol
-  }
+  };
 }
 
 

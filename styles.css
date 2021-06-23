@@ -2,9 +2,9 @@
 header {
   background-color: rgb(82, 79, 79);
   color: white;
-  height: 125px;
+  height: 150px;
   display: flex;
-  justify-content: space-around;
+  justify-content:space-around;
   align-items: center;
   font-size: 25px;
   border-radius: 15px 15px 0px 0px;
@@ -17,15 +17,16 @@ header>div {
 
 .player-area {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 100px;
-  width: 700px;
+  width: 600px;
 }
 
 button {
-  height: 45px;
-  width: 75px;
+  height: 75px;
+  width: 150px;
   font-size: 20px;
   margin: 5px;
 }
@@ -34,6 +35,19 @@ button {
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
+  width:auto;
+}
+
+.mode-input > label{
+  padding: 0px 0px 0px 5px;
+}
+
+.mode-input {
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  justify-content: space-around;
+  height: 100px;
 }
 
 input {
@@ -45,7 +59,7 @@ select {
 }
 
 body {
-  margin: 100px;
+  margin: 100px auto 100px auto;
   max-width: 1500px;
   max-height: 2000px;
   min-height: 1000px;
@@ -88,8 +102,8 @@ body {
 
 #player-boxes {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-direction: row;
+  align-items: stretch;
   width: 550px;
 }
 
@@ -216,8 +230,29 @@ body {
   }
 }
 
-@media (max-width: 1000px) {
+
+
+@media (max-width: 1533px) {
+  body {
+    width: 750px;
+    height: 1200px;
+  }
+
   header {
-    height: 175px;
+    height: 385px;
+    min-width: 750px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-around;
+  }
+
+  #player-boxes {
+    justify-content: center;
+  }
+
+  button {
+    width: 200px;
   }
 }
+
