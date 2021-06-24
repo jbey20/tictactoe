@@ -1,9 +1,7 @@
 //hide player names after start game and unhide when game over
 //banner saying who's turn it is
-//After a game is over, you have to hit start again (change color of start based on playing or not?)
+//After a game is over, change color of buttons based on playing or not?)
 //AI
-  //iron out the process for initiating the AI
-  //Make the AI work when it needs to move first
   //make harder version.
 
 
@@ -91,9 +89,14 @@ const gameBoard = (() => {
   };
 
   const makePlay = (cell) => {
+    if (checkWin() == '2') {
+      const msg = 'Draw!'
+      displayController.endGame(msg);
+      return 'draw';
+    }
     if (gameState[cell]) {
       console.log('Tried to play on already played space');
-      return true;
+      return 'invalid';
     }
     else {
       toggleTurn();
@@ -111,12 +114,14 @@ const gameBoard = (() => {
           const msg = `${players[1]} wins!`;
           displayController.endGame(msg);
         }
+        return 'win';
       }
       else if (checkWin() == 2) {
         const msg = 'Draw!'
         displayController.endGame(msg);
+        return 'draw';
       }
-      return false;
+      else return 'continue';
     }
   };
 
@@ -127,6 +132,16 @@ const gameBoard = (() => {
   const startGame = () => {
     displayController.fillGrid();
     displayController.initialize();
+    const isAI = displayController.readPlayers();
+    if (isAI != 'none') {
+      if (isAI == 'O') {
+        AI.play()
+      }
+      else {
+        AI.AImove();
+        AI.play();
+      };
+    }
   };
 
   const resetGame = () => {
@@ -139,6 +154,7 @@ const gameBoard = (() => {
     playerTurn = 'O';
     moveCounter = 0;
     displayController.emptyGrid();
+    displayController.deinitialize();
   };
 
   return {
@@ -153,12 +169,20 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-  const initialize = () => {
+  const createDivListeners = (e) => {
+    const div = e.target;
+        gameBoard.makePlay(parseInt(div.id.slice(-1)));
+  };
+
+  const initialize = () => {  
     document.querySelectorAll('.board-container div').forEach( item => {
-        item.addEventListener('click', e => {
-          const div = e.target;
-          gameBoard.makePlay(parseInt(div.id.slice(-1)));
-      });
+        item.addEventListener('click', createDivListeners);
+    });
+  };
+
+  const deinitialize = () => {
+    document.querySelectorAll('.board-container div').forEach( item => {
+      item.removeEventListener('click', createDivListeners);
     });
   };
 
@@ -257,22 +281,28 @@ const displayController = (() => {
         playerFactory(xPlayer, 'X'),
         playerFactory(oPlayer, 'O')
       );
+      return 'none';
     }
     else {
       const symbol = document.querySelector('#XorO').value;
       const playerName = document.querySelector('#playerName').value;
+      let AI = '';
       if (symbol == 'X') {
         gameBoard.assignPlayer(playerFactory(playerName, 'X'), playerFactory('WOPR', 'O'));
+        AI = 'O';
       }
       else {
         gameBoard.assignPlayer(playerFactory('WOPR', 'X'), playerFactory(playerName, 'O'));
+        AI = 'X'
       }
+      return AI;
     };    
   };
 
   return {
     fillGrid,
     initialize,
+    deinitialize,
     emptyGrid,
     endGame,
     readPlayers,
@@ -281,36 +311,40 @@ const displayController = (() => {
 })();
 
 const AI = (() => {
-  const countermove = (e) => {
-    const div = e.target;
-
+  const AImove = () => {
     const getRandomCell = () => {
       min = Math.ceil(0);
-      max = Math.floor(8);
+      max = Math.floor(9);
       const cell = Math.floor(Math.random() * (max - min) + min);
       console.log(cell);
       return cell;
     }; 
-    while (gameBoard.makePlay(getRandomCell())) {
-      console.log("Invalid Play");
+    let reply = gameBoard.makePlay(getRandomCell());
+    while (reply == 'invalid') {
+      console.log(reply);
+      reply = gameBoard.makePlay(getRandomCell());
+    };
+    if (reply == 'win' || reply == 'draw') {
+      AI.stop();
     };
   };
   
   const play = (mode) => {
     document.querySelectorAll('.board-container div').forEach( item => {
-        item.addEventListener('click', countermove);
+      item.addEventListener('click', AImove);
     });
   };
 
   const stop = () => {
     document.querySelectorAll('.board-container div').forEach( item => {
-      item.removeEventListener('click', countermove);
+      item.removeEventListener('click', AImove);
     });
   };
 
   return {
     play,
     stop,
+    AImove
   };
 })();
 
