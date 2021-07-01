@@ -17,88 +17,101 @@ const gameBoard = (() => {
     return playerTurn;
   };
 
-  const emptyIndexies = (board) => {
-    return board.filter(s => s!= 'O' && s != 'X');
-  };
+// the main minimax function
+function minimax(newBoard, player){
+  //available spots
+  var availSpots = emptyIndexies(newBoard);
 
-  const winning = (board, player) => {
-    if (
-    (board[0] == player && board[1] == player && board[2] == player) ||
-    (board[3] == player && board[4] == player && board[5] == player) ||
-    (board[6] == player && board[7] == player && board[8] == player) ||
-    (board[0] == player && board[3] == player && board[6] == player) ||
-    (board[1] == player && board[4] == player && board[7] == player) ||
-    (board[2] == player && board[5] == player && board[8] == player) ||
-    (board[0] == player && board[4] == player && board[8] == player) ||
-    (board[2] == player && board[4] == player && board[6] == player)
-    ) {
-    console.log(true);
-    return true;
+  // checks for the terminal states such as win, lose, and tie and returning a value accordingly
+  if (winning(newBoard, oPlayer.getSymbol())){
+     return {score:-10};
+  }
+	else if (winning(newBoard, xPlayer.getSymbol())){
+    return {score:10};
+	}
+  else if (availSpots.length === 0){
+  	return {score:0};
+  }
+
+// an array to collect all the objects
+  var moves = [];
+
+  // loop through available spots
+  for (var i = 0; i < availSpots.length; i++){
+    //create an object for each and store the index of that spot that was stored as a number in the object's index key
+    var move = {};
+  	move.index = newBoard[availSpots[i]];
+
+    // set the empty spot to the current player
+    newBoard[availSpots[i]] = player;
+
+    //if collect the score resulted from calling minimax on the opponent of the current player
+    if (player == xPlayer.getSymbol()){
+      var result = minimax(newBoard, oPlayer.getSymbol());
+      move.score = result.score;
+    }
+    else{
+      var result = minimax(newBoard, xPlayer.getSymbol());
+      move.score = result.score;
+    }
+
+    //reset the spot to empty
+    newBoard[availSpots[i]] = move.index;
+
+    // push the object to the array
+    moves.push(move);
+  }
+
+// if it is the computer's turn loop over the moves and choose the move with the highest score
+  var bestMove;
+  if(player === xPlayer.getSymbol()){
+    var bestScore = -10000;
+    for(var i = 0; i < moves.length; i++){
+      if(moves[i].score > bestScore){
+        bestScore = moves[i].score;
+        bestMove = i;
+      }
+    }
+  }else{
+
+// else loop over the moves and choose the move with the lowest score
+    var bestScore = 10000;
+    for(var i = 0; i < moves.length; i++){
+      if(moves[i].score < bestScore){
+        bestScore = moves[i].score;
+        bestMove = i;
+      }
+    }
+  }
+
+// return the chosen move (object) from the array to the higher depth
+  
+  return moves[bestMove];
+}
+
+// returns the available spots on the board
+function emptyIndexies(board){
+  return  board.filter(s => s != "O" && s != "X");
+}
+
+// winning combinations using the board indexies for instace the first win could be 3 xes in a row
+function winning(board, player){
+ if (
+        (board[0] == player && board[1] == player && board[2] == player) ||
+        (board[3] == player && board[4] == player && board[5] == player) ||
+        (board[6] == player && board[7] == player && board[8] == player) ||
+        (board[0] == player && board[3] == player && board[6] == player) ||
+        (board[1] == player && board[4] == player && board[7] == player) ||
+        (board[2] == player && board[5] == player && board[8] == player) ||
+        (board[0] == player && board[4] == player && board[8] == player) ||
+        (board[2] == player && board[4] == player && board[6] == player)
+        ) {
+        return true;
     } else {
-    console.log(false);
-    return false;
+        return false;
     }
-   }
+}
 
-  const minimax = (board, player) => {
-    let newBoard = [...board];
-    const availSpots = emptyIndexies(newBoard);
-    //base cases
-    if (winning(newBoard, xPlayer.getSymbol())) {
-      console.log(-10);
-      return {score: -10};
-    }
-    else if (winning(newBoard, oPlayer.getSymbol())) {
-      console.log(10);
-      return {score: 10};
-    }
-    else if (availSpots.length === 0) {
-      console.log(0);
-      return {score: 0};
-    };
-
-    //recursive call to minimax
-    let moves = [];
-    for (let i = 0; i < availSpots.length; i++) {
-      let move = {};
-      move.index = newBoard[availSpots[i]];
-      newBoard[availSpots[i]] = player.getSymbol();
-      console.log(newBoard);
-      if (player == xPlayer) {
-        let result = minimax(newBoard, oPlayer);
-        move.score = result.score;
-      }
-      else {
-        let result = minimax(newBoard, xPlayer);
-        move.score = result.score;
-      }
-      newBoard[availSpots[i]] = move.index;
-      moves.push(move);
-    }
-
-    //determine best moves
-    let bestMove;
-    if (player == xPlayer) {
-      let bestScore = -10000;
-      for (let i = 0; i < moves.length; i++) {
-        if (moves[i].score > bestScore) {
-          bestScore = moves[i].score;
-          bestMove = i;
-        }
-      }
-    }
-    else {
-      let bestScore = 10000;
-      for (let i = 0; i < moves.length; i++) {
-        if (moves[i].score > bestScore) {
-          bestScore = moves[i].score;
-          bestMove = i;
-        }
-      }
-    }
-
-    return moves[bestMove];
-  };
 
   const assignPlayer = (playerX, playerO) => {
     xPlayer = playerX;
@@ -224,23 +237,23 @@ const gameBoard = (() => {
     const isAI = displayController.readPlayers();
     if (isAI != 'none') {
       if (isAI == 'O') {
-        AI.play()
+        AI.play(1)
       }
       else {
         AI.AImove();
-        AI.play();
+        AI.play(0);
       };
     }
   };
 
   const resetGame = () => {
     for (let i = 0; i < gameState.length; i++) {
-      gameState[i] = null;
+      gameState[i] = i;
     }
     for (let i = 0; i < win.length; i++) {
       win[i] = 0;
     }
-    playerTurn = 'O';
+    playerTurn = oPlayer;
     moveCounter = 0;
     displayController.emptyGrid();
     displayController.deinitialize();
@@ -255,7 +268,8 @@ const gameBoard = (() => {
     getPlayers, 
     getPlayerTurn,
     getMoveCounter,
-    minimax
+    minimax,
+    toggleTurn
   };
 })();
 
@@ -379,11 +393,11 @@ const displayController = (() => {
       const playerName = document.querySelector('#playerName').value;
       let AI = '';
       if (symbol == 'X') {
-        gameBoard.assignPlayer(playerFactory(playerName, 'X'), playerFactory('WOPR', 'O'));
+        gameBoard.assignPlayer(playerFactory(playerName, 'X', false), playerFactory('WOPR', 'O', true));
         AI = 'O';
       }
       else {
-        gameBoard.assignPlayer(playerFactory('WOPR', 'X'), playerFactory(playerName, 'O'));
+        gameBoard.assignPlayer(playerFactory('WOPR', 'X', true), playerFactory(playerName, 'O', false));
         AI = 'X'
       }
       return AI;
@@ -415,8 +429,11 @@ const AI = (() => {
     //   console.log(reply);
     //   reply = gameBoard.makePlay(getRandomCell());
     // };
-    const move = gameBoard.minimax(gameBoard.getGameState(), gameBoard.getPlayerTurn())
-    const reply = gameBoard.makePlay(move);
+    const player = gameBoard.getPlayers()[0].isAI() ? gameBoard.getPlayers()[0].getSymbol() : gameBoard.getPlayers()[1].getSymbol();
+    console.log(player);
+    const move = gameBoard.minimax(gameBoard.getGameState(), player);
+    
+    const reply = gameBoard.makePlay(move.index);
     
     if (reply == 'win' || reply == 'draw') {
       AI.stop();
@@ -443,12 +460,14 @@ const AI = (() => {
   };
 })();
 
-const playerFactory = (name, symbol) => {
+const playerFactory = (name, symbol, ai) => {
   const getName = () => name;
   const getSymbol = () => symbol;
+  const isAI = () => ai;
   return {
     getName,
-    getSymbol
+    getSymbol,
+    isAI
   };
 }
 
