@@ -257,6 +257,7 @@ function winning(board, player){
     moveCounter = 0;
     displayController.emptyGrid();
     displayController.deinitialize();
+    AI.stop();
   };
 
   return {
