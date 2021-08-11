@@ -80,7 +80,7 @@
 
   .boardCell {
     color: black;
-    font-family: cursive;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
     text-align: center;
     height: 15vh;
     width: 15vh;
