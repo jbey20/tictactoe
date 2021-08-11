@@ -2,12 +2,11 @@
 header {
   background-color: rgb(82, 79, 79);
   color: white;
-  height: 150px;
   display: flex;
   justify-content:space-around;
   align-items: center;
   font-size: 25px;
-  border-radius: 15px 15px 0px 0px;
+  border-radius: 0px 0px 15px 15px;
 }
 
 header>div {
@@ -21,12 +20,12 @@ header>div {
   align-items: center;
   justify-content: space-between;
   height: 100px;
-  width: 600px;
+  width: 350px;
 }
 
 button {
   height: 75px;
-  width: 150px;
+  width: 100px;
   font-size: 20px;
   margin: 5px;
 }
@@ -59,10 +58,11 @@ select {
 }
 
 body {
-  margin: 100px auto 100px auto;
-  max-width: 1500px;
-  max-height: 2000px;
-  min-height: 1000px;
+  margin: 25px auto 25px auto;
+  max-width: 1000px;
+  max-height: 1000px;
+  width: 75vw;
+  height: 80vh;
   border: 4px solid black;
   border-radius: 20px;
   display: flex;
@@ -78,20 +78,17 @@ body {
     'zero one two'
     'three four five'
     'six seven eight';
-  height: 600px;
-  width: 600px;
   margin: auto;
 }
 
 .boardCell {
   /* border: 8px solid black; */
   color: black;
-  height: 200px;
+  height: 150px;
   width: 200px;
-  font-size: rem;
-  font-family: Arial;
-  font-size: 10em;
-  line-height: 200px;
+  font-family: "Bradley Hand", cursive;
+  font-size: 8em;
+  line-height: 150px;
   text-align: center;
 }
 
@@ -104,7 +101,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  width: 550px;
+  width: 400px;
 }
 
 .one-player-input {
@@ -220,27 +217,23 @@ body {
   -webkit-filter: blur(10px);
 }
 
-@media (max-width: 1502px) {
+/* @media (max-width: 1502px) {
   body {
     min-width: 700px;
   }
   
-  header {
-    height: 150px;
-  }
-}
+  
+} */
 
 
 
 @media (max-width: 1533px) {
   body {
-    width: 750px;
-    height: 1200px;
+    width: 100vw;
+    height: 100vh;
   }
 
   header {
-    height: 385px;
-    min-width: 750px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;

@@ -357,7 +357,7 @@ const displayController = (() => {
   };
 
   const writeToDOM = (selector, content) => {
-    document.querySelector(selector).textContent = content;
+    document.querySelector(`${selector} > p`).textContent = content;
   };
 
   const fillGrid = () => {
@@ -417,23 +417,31 @@ const displayController = (() => {
 
 const AI = (() => {
   const AImove = () => {
-    // const getRandomCell = () => {
-    //   min = Math.ceil(0);
-    //   max = Math.floor(9);
-    //   const cell = Math.floor(Math.random() * (max - min) + min);
-    //   console.log(cell);
-    //   return cell;
-    // }; 
-    // let reply = gameBoard.makePlay(getRandomCell());
-    // while (reply == 'invalid') {
-    //   console.log(reply);
-    //   reply = gameBoard.makePlay(getRandomCell());
-    // };
     const player = gameBoard.getPlayers()[0].isAI() ? gameBoard.getPlayers()[0].getSymbol() : gameBoard.getPlayers()[1].getSymbol();
     console.log(player);
-    const move = gameBoard.minimax(gameBoard.getGameState(), player);
+
+    const diff = Math.random();
+    let reply;
+    if (diff >= 0.25) {
+      const move = gameBoard.minimax(gameBoard.getGameState(), player);
+      reply = gameBoard.makePlay(move.index);
+    } else {
+      const getRandomCell = () => {
+        min = Math.ceil(0);
+        max = Math.floor(9);
+        const cell = Math.floor(Math.random() * (max - min) + min);
+        console.log(cell);
+        return cell;
+      }; 
+      reply = gameBoard.makePlay(getRandomCell());
+      while (reply == 'invalid') {
+        console.log(reply);
+        reply = gameBoard.makePlay(getRandomCell());
+      };
+    }
     
-    const reply = gameBoard.makePlay(move.index);
+    
+    
     
     if (reply == 'win' || reply == 'draw') {
       AI.stop();
